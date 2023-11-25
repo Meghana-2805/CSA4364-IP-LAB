@@ -1,0 +1,102 @@
+<html>
+<title>Home page </title>
+</head>
+<body style="background-color:pink";>
+<center><h1>XYZ LIBRARY </h1></center>
+<br>
+<form action="Login.html">
+<input type="submit" value="Login">
+</form>
+<form action="Register.html">
+<input type="submit" value="Register">
+</form>
+</body>
+</html>
+
+<html>
+<title>Login Page </title>
+</head>
+<body>
+<center><h1>GARUDA</h1></center>
+<br>
+<form action="Login.php" method="POST">
+User Name:
+<input type="text" name="user"><br>
+Password:
+<input type="text" name="pass"><br>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
+
+<html>
+<title>Register Page </title>
+</head>
+<body>
+<center><h1>GARUDA </h1></center>
+<br>
+<form action="Register.php" method="POST">
+User Name:
+<input type="text" name="user"><br>
+Password:
+<input type="text" name="pass"><br>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "student";
+$conn = new mysqli($servername ,$username,$password,$dbname);
+if (!$conn){
+die('Could not connect: '.mysqli_connect_error());
+}
+echo 'Connected successfully<br/>';
+$stmt=$conn->prepare("INSERT INTO user(name,password) VALUES(?,?)");
+$stmt->bind_param("ss",$u,$p);
+$u=$_POST["user"];
+$p=$_POST["pass"];
+$stmt->execute();
+echo "Record inserted successfully";
+$stmt->close();
+$conn->close();
+header("refresh:2;url=Home.html");
+?>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "student";
+$conn = new mysqli($servername ,$username,$password,$dbname);
+if(!$conn){
+die('Could not connect: '.mysqli_connect_error());
+}
+echo 'Connected successfully<br/>';
+$u=$_POST["user"];
+$p=$_POST["pass"];
+$sql = "SELECT name,password FROM user where name= '{$u}' ";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+while($row = $result->fetch_assoc()) {
+  if($row["name"]==$u && $row["password"]==$p)
+   {
+     echo "You have been successfully validated";
+}
+else
+{
+echo "Credentials wrong,Try again";
+}
+}
+}
+else
+{
+echo "User name given ws not exist";
+}
+$conn->close();
+ header("refresh:2; url=Home.html");
+?>
